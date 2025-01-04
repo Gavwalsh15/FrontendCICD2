@@ -1,11 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import styles from '../../components/restaurant/NewRestaurantForm.module.css';
-import GlobalContext from "../../pages/store/globalContext"
-import {useRouter} from "next/router";
+import GlobalContext from "../../pages/store/globalContext";
+import { useRouter } from "next/router";
 
 const SignUpPage = () => {
-    const router = useRouter()
-    const [username, setUsername] = useState('');
+    const router = useRouter();
     const globalCtx = useContext(GlobalContext);
 
     const [formData, setFormData] = useState({
@@ -17,22 +16,19 @@ const SignUpPage = () => {
         password: ''
     });
 
-    // Update state for form fields
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     };
 
     async function handleSignUp(event) {
         event.preventDefault();
-        // Make Signup!
-        await globalCtx.login(formData.username);
+        await globalCtx.signUp(formData); // Ensure formData is passed here
         router.push('/');
     }
-
 
     return (
         <div className={styles.form}>

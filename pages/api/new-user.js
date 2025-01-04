@@ -1,5 +1,5 @@
 async function handler(req, res) { // can be called anything you like
-    const response = await fetch('http://localhost:8080/api/customers', {
+    const response = await fetch('http://localhost:8080/api/customer/create', {
         method: 'POST',
         body: JSON.stringify(req.body),
         headers: {
@@ -7,6 +7,7 @@ async function handler(req, res) { // can be called anything you like
         }
     });
     const data = await response.json();
+    console.log(data);
     res.json(data)
 }
 

@@ -40,6 +40,38 @@ export function GlobalContextProvider(props) {
         });
     }
 
+    async function signUp(formData) {
+        try {
+            console.log(formData);
+            const response = await fetch('/api/new-user', {
+                method: 'POST',
+                body: JSON.stringify(formData), // Send the formData as JSON
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                // Handle server errors
+                const error = await response.json();
+                throw new Error(error.message || 'Sign-up failed');
+            }
+
+            const signUpDetails = await response.json();
+            console.log('Sign-up successful:', signUpDetails);
+
+            setGlobals((previousGlobals) => {
+                const newGlobals = JSON.parse(JSON.stringify(previousGlobals));
+                newGlobals.user = formData.username;
+                return newGlobals
+            })
+
+        } catch (error) {
+            console.error('Error during sign-up:', error.message);
+        }
+    }
+
+
     async function login(username, password) {
         const response = await fetch('/api/login-user', {
             method: 'POST',
@@ -55,11 +87,10 @@ export function GlobalContextProvider(props) {
         }else{
             return error(response);
         }
-        console.log(loginDetails);
 
         setGlobals((previousGlobals) => {
             const newGlobals = JSON.parse(JSON.stringify(previousGlobals));
-            newGlobals.user = loginDetails;
+            newGlobals.user = loginDetails.username;
             return newGlobals
         })
     }
@@ -132,6 +163,7 @@ export function GlobalContextProvider(props) {
         updateGlobals: editGlobalData,
         theGlobalObject: globals,
         login: login,
+        signUp: signUp
     }
 
     return <GlobalContext.Provider value={context}>

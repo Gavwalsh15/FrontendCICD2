@@ -11,7 +11,7 @@ export default function RestaurantPage() {
 
     async function addMenuItemHandler(menuItemData) {
         const newMenuItemData = {
-            menuItemData,
+            ...menuItemData,
             restaurantId: restaurantId  // Use the restaurantId from the router query
         };
 

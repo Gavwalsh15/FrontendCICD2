@@ -32,6 +32,7 @@ function RestaurantDetail(props) {
 
                 const data = await response.json();
                 setMenuItems(data); // Store the fetched menu items in state
+                console.log(data);
             } catch (error) {
                 setError(error.message);
             } finally {
