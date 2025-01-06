@@ -136,7 +136,8 @@ export function GlobalContextProvider(props) {
         }
 
         if (command.cmd == 'addOrder') {
-            const response = await fetch('/api/new-order', {
+
+            const response = await fetch(`/api/new-order/`, {
                 method: 'POST',
                 body: JSON.stringify(command.newVal),
                 headers: {

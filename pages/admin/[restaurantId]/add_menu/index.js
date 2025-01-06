@@ -12,9 +12,10 @@ export default function RestaurantPage() {
     async function addMenuItemHandler(menuItemData) {
         const newMenuItemData = {
             ...menuItemData,
-            restaurantId: restaurantId  // Use the restaurantId from the router query
+            restaurantId: restaurantId,  // Use the restaurantId from the router query
         };
 
+        console.log(newMenuItemData);
         await globalCtx.updateGlobals({cmd: 'addMenuItem', newVal: newMenuItemData})
         router.push('/admin/' + restaurantId);
     }

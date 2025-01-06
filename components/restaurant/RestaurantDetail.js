@@ -7,8 +7,8 @@ function RestaurantDetail(props) {
     const [order, setOrder] = useState({
         restaurantId: '',
         username: '',
-        foodselected: [],
-        totalprice: 0
+        foodSelected: [],
+        totalPrice: 0
     });
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [menuItems, setMenuItems] = useState([]); // Holds menu items fetched from API
@@ -46,11 +46,11 @@ function RestaurantDetail(props) {
     // Handle item quantity change
     const handleQuantityChange = (quantity, name, price) => {
         setOrder((prevState) => {
-            const existingItemIndex = prevState.foodselected.findIndex(item => item.name === name);
+            const existingItemIndex = prevState.foodSelected.findIndex(item => item.name === name);
             let updatedFoodSelected;
 
             if (existingItemIndex >= 0) {
-                updatedFoodSelected = [...prevState.foodselected];
+                updatedFoodSelected = [...prevState.foodSelected];
                 updatedFoodSelected[existingItemIndex] = {
                     ...updatedFoodSelected[existingItemIndex],
                     quantity,
@@ -58,7 +58,7 @@ function RestaurantDetail(props) {
                 };
             } else {
                 updatedFoodSelected = [
-                    ...prevState.foodselected,
+                    ...prevState.foodSelected,
                     { name, price, quantity, total: quantity * price }
                 ];
             }
@@ -67,8 +67,8 @@ function RestaurantDetail(props) {
 
             return {
                 ...prevState,
-                foodselected: updatedFoodSelected,
-                totalprice: newTotalPrice
+                foodSelected: updatedFoodSelected,
+                totalPrice: newTotalPrice
             };
         });
     };
@@ -80,7 +80,7 @@ function RestaurantDetail(props) {
             alert("Please Login before entering order");
             return;
         }
-        if (!order.foodselected[0]) {
+        if (!order.foodSelected[0]) {
             alert("Order is empty");
             return;
         }
@@ -125,7 +125,7 @@ function RestaurantDetail(props) {
                         {menuItems
                             .filter(menuItem => selectedCategory === 'All' || menuItem.category === selectedCategory)
                             .map((menuItem, index) => {
-                                const currentOrder = order.foodselected.find(item => item.name === menuItem.name) || { quantity: 0 };
+                                const currentOrder = order.foodSelected.find(item => item.name === menuItem.name) || { quantity: 0 };
 
                                 return (
                                     <div key={index} className={classes.menuItem}>
@@ -150,13 +150,13 @@ function RestaurantDetail(props) {
 
                     <h2 className={classes.subheader}>Order Summary</h2>
                     <ul>
-                        {order.foodselected.filter(item => item.quantity > 0).map((item, index) => (
+                        {order.foodSelected.filter(item => item.quantity > 0).map((item, index) => (
                             <li key={index}>
                                 {item.quantity} x {item.name}
                             </li>
                         ))}
                     </ul>
-                    <p>Total Price: ${order.totalprice.toFixed(2)}</p>
+                    <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
                     <div className={classes.actions}>
                         <button type="submit">Submit Order</button>
                     </div>

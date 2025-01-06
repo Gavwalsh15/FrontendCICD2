@@ -1,10 +1,9 @@
 // /api/new-meetup
 
 async function handler(req, res) {// can be called anything you like
-    console.log(req.body)
-    const response = await fetch('http://localhost:8081/api/restaurant/addMenu', {
+    const response = await fetch(`http://localhost:8081/api/restaurant/addMenu/${req.body.restaurantId}`, {
         method: 'POST',
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(req.body.order),
         headers: {
             'Content-Type': 'application/json'
         }
