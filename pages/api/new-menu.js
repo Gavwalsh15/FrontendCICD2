@@ -3,7 +3,7 @@
 async function handler(req, res) {// can be called anything you like
     const response = await fetch(`http://localhost:8081/api/restaurant/addMenu/${req.body.restaurantId}`, {
         method: 'POST',
-        body: JSON.stringify(req.body.order),
+        body: JSON.stringify(req.body.menuItemData),
         headers: {
             'Content-Type': 'application/json'
         }

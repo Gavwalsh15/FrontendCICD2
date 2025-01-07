@@ -1,4 +1,4 @@
-import RestaurantDetail from '../../../components/restaurant/orders/Orders';
+import Orders from '../../../components/restaurant/orders/Orders';
 import GlobalContext from '../../store/globalContext';
 import { useContext } from 'react';
 
@@ -12,7 +12,7 @@ export default function RestaurantPage() {
 
     return (
         <div>
-            <RestaurantDetail onAddOrder={addOrderHandler} />
+            <Orders onAddOrder={addOrderHandler} />
         </div>
     );
 }

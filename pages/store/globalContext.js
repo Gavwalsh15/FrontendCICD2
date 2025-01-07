@@ -75,26 +75,25 @@ export function GlobalContextProvider(props) {
     async function login(username, password) {
         const response = await fetch('/api/login-user', {
             method: 'POST',
-            body: JSON.stringify(username, password),
+            body: JSON.stringify({ username, password }),
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
         });
 
-        let loginDetails;
         if (response.ok) {
-            loginDetails = await response.json();
-        }else{
-            return error(response);
+            const loginDetails = await response.json();
+            setGlobals((previousGlobals) => {
+                const newGlobals = JSON.parse(JSON.stringify(previousGlobals));
+                newGlobals.user = loginDetails.username;
+                return newGlobals;
+            });
+            return loginDetails; // Return user details for successful login
+        } else {
+            const error = await response.json();
+            return { error: error.message || 'Login failed' }; // Standardized error response
         }
-
-        setGlobals((previousGlobals) => {
-            const newGlobals = JSON.parse(JSON.stringify(previousGlobals));
-            newGlobals.user = loginDetails.username;
-            return newGlobals
-        })
     }
-
 
     async function editGlobalData(command) { // {cmd: someCommand, newVal: 'new text'}
         if (command.cmd == 'hideHamMenu') { // {cmd: 'hideHamMenu', newVal: false}

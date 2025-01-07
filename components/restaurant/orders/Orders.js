@@ -1,43 +1,68 @@
-import Card from '../../ui/Card';
 import classes from './Orders.module.css';
-import {useContext} from "react";
+import React, { useContext, useState, useEffect } from 'react';
 import GlobalContext from "../../../pages/store/globalContext";
 
-function Orders(props) {
-    const globalCtx = useContext(GlobalContext)
-    let orders;
+function OrdersDetail(props) {
+    const globalCtx = useContext(GlobalContext);
+    const [orders, setOrders] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    async function fetchOrdersHandler() {
-        orders = await globalCtx.updateGlobals({ cmd: 'findOrders', newVal: {username: globalCtx.theGlobalObject.user} });
+    // Fetch orders using global context
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                // Call updateGlobals to fetch the orders using the user's username
+                const fetchedOrders = await globalCtx.updateGlobals({
+                    cmd: 'findOrders',
+                    newVal: { username: globalCtx.theGlobalObject.user }
+                });
 
-    }
+                setOrders(fetchedOrders); // Update state with fetched orders
+            } catch (error) {
+                setError('Failed to fetch orders');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, [globalCtx]); // Re-fetch orders if the global context changes
 
     return (
-        <li className={classes.item}>
-            <Card>
-                <div className={classes.image}>
-                    <img src={props.image} alt={props.title}/>
+        <section className={classes.ordersPage}>
+            <h1 className={classes.header}>Your Orders</h1>
+
+            {/* Loading and Error Handling */}
+            {isLoading ? (
+                <p>Loading your orders...</p>
+            ) : error ? (
+                <p>{error}</p>
+            ) : (
+                <div className={classes.ordersList}>
+                    {orders.length === 0 ? (
+                        <p>No orders available.</p>
+                    ) : (
+                        orders.map((order, index) => (
+                            <div key={index} className={classes.orderItem}>
+                                <h2>Restaurant: {order.restaurantId}</h2>
+                                <p>Status: {order.status}</p>
+                                <p>Address: {order.customerAddress}</p>
+                                <ul>
+                                    {order.foodSelected.map((food, foodIndex) => (
+                                        <li key={foodIndex}>
+                                            {food.quantity || 0} x {food.name} (${food.price} each)
+                                        </li>
+                                    ))}
+                                </ul>
+                                <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
+                            </div>
+                        ))
+                    )}
                 </div>
-                <div className={classes.content}>
-                    <h2>{props.title}</h2>
-                    <address>{props.address}</address>
-                    <h3>{props.foodType}</h3>
-                </div>
-                <div className={classes.actions}>
-                    <button onClick={fetchOrdersHandler}>Show Orders</button>
-                    <ul className={classes.orderList}>
-                        {props.orders && props.orders.length > 0
-                            ? props.orders.map((order) => (
-                                  <li key={order.id}>
-                                      {order.itemName} - {order.quantity}
-                                  </li>
-                              ))
-                            : <li>No orders available.</li>}
-                    </ul>
-                </div>
-            </Card>
-        </li>
+            )}
+        </section>
     );
 }
 
-export default Orders;
+export default OrdersDetail;
